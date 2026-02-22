@@ -11,7 +11,7 @@ TAVILY_KEY = os.getenv("TAVILY_API_KEY") or st.secrets.get("TAVILY_API_KEY")
 # Initialize the Agent
 # Note: Using 'google-gla:gemini-1.5-flash' for 2026 stability
 recruiter_agent = Agent(
-    'google-gla:gemini-1.5-flash',
+    'gemini-1.5-flash',
     system_prompt=(
         "You are an elite technical recruiter and investigator. "
         "Your task is to verify a candidate's background by comparing their resume "
