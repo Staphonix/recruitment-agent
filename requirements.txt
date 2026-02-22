@@ -1,5 +1,5 @@
 streamlit
 pydantic-ai
 python-dotenv
-goole-generativeai
+google-generativeai
 tavily-python
