@@ -5,8 +5,15 @@ from pydantic_ai.models.gemini import GeminiModel
 
 load_dotenv()
 
-# The 'google-gla:' prefix is the key to solving the 404 error
-model = GeminiModel('google-gla:gemini-1.5-flash', api_key=os.getenv("GOOGLE_API_KEY"))
+# We pull the key and store it in a variable first
+api_key = os.getenv("GOOGLE_API_KEY")
+
+# This check prevents the TypeError by stopping the app if the key is missing
+if not api_key:
+    raise ValueError("GOOGLE_API_KEY not found! Check your Streamlit Secrets.")
+
+# Now we pass the validated key to the model
+model = GeminiModel('google-gla:gemini-1.5-flash', api_key=api_key)
 
 recruiter_agent = Agent(
     model,
