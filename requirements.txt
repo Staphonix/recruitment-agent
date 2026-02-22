@@ -1,0 +1,5 @@
+streamlit
+pydantic-ai
+python-dotenv
+goole-generativeai
+tavily-python
