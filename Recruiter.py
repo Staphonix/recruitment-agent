@@ -3,7 +3,7 @@ import asyncio
 import pandas as pd
 from dotenv import load_dotenv
 from pydantic import BaseModel, Field
-from pydantic_ai import Agent, BinaryPart
+from pydantic_ai import Agent, BinaryContent
 from pydantic_ai.models.google import GoogleModel
 from pydantic_ai.providers.google import GoogleProvider
 from tavily import TavilyClient
