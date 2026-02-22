@@ -1,26 +1,34 @@
+import streamlit as st
 import os
-from dotenv import load_dotenv
 from pydantic_ai import Agent
 from pydantic_ai.models.gemini import GeminiModel
+from pydantic_ai.common_tools.tavily import tavily_search_tool
 
-load_dotenv()
+# 1. Access keys from Streamlit Secrets
+# This works for both Local and Cloud as long as the format is correct
+try:
+    gemini_key = st.secrets.get("GOOGLE_API_KEY")
+    tavily_key = st.secrets.get("TAVILY_API_KEY")
+except Exception:
+    gemini_key = None
+    tavily_key = None
 
-# We pull the key and store it in a variable first
-api_key = os.getenv("GOOGLE_API_KEY")
+# 2. Key Guard: Stop the app if keys are missing
+if not gemini_key or not tavily_key:
+    st.error("🚨 API Keys are missing! Go to Streamlit Settings > Secrets and ensure they are added correctly.")
+    st.info("Format: GOOGLE_API_KEY = 'your_key' and TAVILY_API_KEY = 'your_key'")
+    st.stop()
 
-# This check prevents the TypeError by stopping the app if the key is missing
-if not api_key:
-    raise ValueError("GOOGLE_API_KEY not found! Check your Streamlit Secrets.")
+# 3. Initialize Model
+model = GeminiModel('google-gla:gemini-1.5-flash', api_key=gemini_key)
 
-# Now we pass the validated key to the model
-model = GeminiModel('google-gla:gemini-1.5-flash', api_key=api_key)
-
+# 4. Setup Agent with Tavily Tool
 recruiter_agent = Agent(
     model,
+    tools=[tavily_search_tool(api_key=tavily_key)],
     system_prompt=(
-        "You are an expert recruitment researcher. Your job is to audit a candidate "
-        "by comparing their resume against real-world data. Look for discrepancies "
-        "in employment dates, skills, and company roles. Be professional but critical."
+        "You are an expert recruitment researcher. Use the search tool to verify "
+        "employment history, company details, and project claims. Be professional but critical."
     ),
 )
 
