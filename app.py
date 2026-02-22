@@ -28,8 +28,11 @@ if st.button("🚀 Start Audit"):
                 f.write(uploaded_file.getbuffer())
             
             try:
-                # Trigger the async logic
-                report = asyncio.run(audit_candidate(name, role, temp_name))
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    report = loop.run_until_complete(audit_candidate(name, role, temp_name))
+finally:
+    loop.close()
                 
                 status.update(label="✅ Audit Complete!", state="complete")
                 st.subheader(f"Verification Report: {name}")
